@@ -7,7 +7,7 @@ The Thanksgiving recipes started as a cookbook for cooking in bulk for 100 to 15
 ## What it does
 
 - **Recipe list** for the whole book, grouped by type, with search (by recipe or ingredient) and vegan and gluten-free filters.
-- **Thanksgiving section** with its own recipe list, the prep plan and the turkey calculator.
+- **Sections** with their own page, home-screen button and tab: Thanksgiving dinner (with the prep plan and the turkey calculator) and Desserts.
 - **Batch scaling** from ½ batch to 30 batches. Amounts are rewritten in sensible kitchen units as they change (3 tsp becomes 1 tbsp, 16 oz becomes 1 lb). A "Big dinner" button jumps to the batch count the original bulk cookbook used.
 - **US and metric units.** Metric shows grams and millilitres, leads with Celsius, and converts the measurements inside the steps and notes too.
 - **Ingredient swaps.** Dairy lines in some recipes have a drop-down of one-for-one vegan alternatives. A recipe is tagged vegan once every swap is made.
@@ -31,13 +31,16 @@ The page loads two typefaces from Google Fonts. Without a connection it falls ba
 | File | What it holds |
 |---|---|
 | `index.html` | The page shell. |
-| `recipes.js` | All the content: recipes, tags and the prep plan. |
+| `recipes.js` | Shared setup: the groups, the tags, the sections and the field reference. |
+| `recipes/thanksgiving.js` | The Thanksgiving section (mains, sides, sauces, leftover soup) and the prep plan. |
+| `recipes/everyday.js` | Everything else that is not a dessert. |
+| `recipes/desserts.js` | The Desserts section, including the two served at Thanksgiving. |
 | `app.js` | The page logic: views, scaling, unit conversion, swaps, navigation. |
 | `styles.css` | The design, including dark mode and print styles. |
 
 ## Editing recipes
 
-Everything you would want to change lives in `recipes.js`. Amounts are written once, for one batch, in US units; the page does the scaling and the metric conversion.
+Recipes live in the `recipes/` folder, one file per section. To add a section, create another file like them and add a `<script>` line for it in `index.html`, after `recipes.js` and before `app.js`. Amounts are written once, for one batch, in US units; the page does the scaling and the metric conversion.
 
 A recipe looks like this:
 
@@ -46,7 +49,7 @@ A recipe looks like this:
   id: "green-beans",                  // used in the page address; keep it unique
   name: "Garlic green beans",
   group: "Sides",                     // must match a name in window.GROUPS
-  thanksgiving: true,                 // also list it in the Thanksgiving section (optional)
+  section: "thanksgiving",            // the section it belongs to, from window.SECTIONS (optional)
   tags: ["vegan", "gf"],              // keys from window.TAGS
   makes: { n: [8, 8], what: "servings" },
   crowd: 10,                          // batches for the big dinner (optional)
@@ -89,7 +92,7 @@ Two more recipe fields: `time` is a line of text under the title, and `veganSwap
 
 Write steps and notes in US units with the temperature in both scales, like `350°F (180°C)`. In metric mode the page swaps the order and converts any `lb`, `oz`, `cups` and `inch` measurements it finds in the text.
 
-The prep plan is the `window.PLAN` list at the bottom of the same file. Each task can carry an `r` field with a recipe `id` to link to it.
+The prep plan is the `window.PLAN` list at the bottom of `recipes/thanksgiving.js`. Each task can carry an `r` field with a recipe `id` to link to it.
 
 ## Things to know
 

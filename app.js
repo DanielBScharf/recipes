@@ -7,6 +7,14 @@
   var GROUPS = window.GROUPS || [];
   var TAGS = window.TAGS || {};
   var PLAN = window.PLAN || [];
+  var SECTIONS = window.SECTIONS || [];
+  var sectionById = {};
+  SECTIONS.forEach(function (s) { sectionById[s.id] = s; });
+  function inSection(id) { return RECIPES.filter(function (r) { return r.section === id; }); }
+  function sectionBlurb(s) {
+    var n = inSection(s.id).length;
+    return n + " recipes" + (s.plan ? ", a three-day prep plan and a turkey timer" : "");
+  }
   var app = document.getElementById("app");
 
   var byId = {};
@@ -238,9 +246,9 @@
     }).join("");
   }
 
-  /* The whole book, or just the Thanksgiving section. */
-  function viewList(thanksgiving) {
-    var book = RECIPES.filter(function (r) { return !thanksgiving || r.thanksgiving; });
+  /* The whole book, or one section of it. */
+  function viewList(section) {
+    var book = section ? inSection(section.id) : RECIPES;
     var q = listState.q.trim().toLowerCase();
     var tag = listState.tag;
 
@@ -255,19 +263,22 @@
     }
 
     var html;
-    if (thanksgiving) {
+    if (section) {
       html = '<div class="topbar"><a class="back" href="#/"><span>All recipes</span></a>' + unitSwitch() + "</div>" +
-        '<header class="masthead"><h1>Thanksgiving dinner</h1>' +
-        "<p>" + book.length + " recipes, each written as one batch for a family table. Open one to scale it up for a crowd.</p></header>" +
-        '<a class="feature" href="#/plan"><strong>Prep plan and turkey timer</strong>' +
-        "<span>What to do two days before, the day before and on the day</span></a>";
+        '<header class="masthead"><h1>' + esc(section.name) + "</h1>" +
+        "<p>" + book.length + " recipes" + (section.intro ? ", " + esc(section.intro) : ".") + "</p></header>";
+      if (section.plan) {
+        html += '<a class="feature" href="#/plan"><strong>Prep plan and turkey timer</strong>' +
+          "<span>What to do two days before, the day before and on the day</span></a>";
+      }
     } else {
-      var count = RECIPES.filter(function (r) { return r.thanksgiving; }).length;
       html = '<div class="topbar">' + unitSwitch() + "</div>" + '<header class="masthead">' +
         "<h1>Daniel’s Recipe Book</h1>" +
         "<p>" + book.length + " recipes Daniel experimented with and adapted. Open one to scale it up or down.</p></header>" +
-        '<a class="feature" href="#/thanksgiving"><strong>Thanksgiving dinner</strong>' +
-        "<span>" + count + " recipes, a three-day prep plan and a turkey timer</span></a>";
+        '<div class="features">' + SECTIONS.map(function (s, i) {
+          return '<a class="feature' + (i ? " feature-" + esc(s.id) : "") + '" href="#/' + esc(s.id) + '"><strong>' + esc(s.name) + "</strong>" +
+            "<span>" + esc(sectionBlurb(s)) + "</span></a>";
+        }).join("") + "</div>";
     }
 
     html += '<div class="finder">' +
@@ -281,11 +292,12 @@
       "</div></div>";
 
     var shown = 0;
+    var oneGroup = GROUPS.filter(function (g) { return book.some(function (r) { return r.group === g; }); }).length < 2;
     GROUPS.forEach(function (g) {
       var rows = book.filter(function (r) { return r.group === g && matches(r); });
       if (!rows.length) return;
       shown += rows.length;
-      html += '<section class="group"><h2>' + esc(g) + "</h2><ul>";
+      html += '<section class="group">' + (oneGroup ? '<ul class="lone">' : "<h2>" + esc(g) + "</h2><ul>");
       rows.forEach(function (r) {
         var k = batchesFor(r.id);
         html += '<li><a class="row" href="#/r/' + esc(r.id) + '">' +
@@ -490,7 +502,7 @@
    * prep plan) can offer a way back to the same spot. Emptied on the recipe list. */
   var trail = [];
 
-  function keyOf(r) { return r.view === "recipe" ? "r/" + r.recipe.id : r.view; }
+  function keyOf(r) { return r.view === "recipe" ? "r/" + r.recipe.id : r.view === "section" ? r.section.id : r.view; }
 
   function navigate() {
     var prev = current, next = route();
@@ -505,7 +517,7 @@
         trail.push({
           key: keyOf(prev),
           href: "#/" + keyOf(prev),
-          label: prev.view === "plan" ? "the prep plan" : prev.view === "thanksgiving" ? "Thanksgiving" : prev.recipe.name,
+          label: prev.view === "plan" ? "the prep plan" : prev.view === "section" ? prev.section.tab : prev.recipe.name,
           y: y
         });
       } else {
@@ -521,7 +533,7 @@
   function route() {
     var h = location.hash.replace(/^#\/?/, "");
     if (h === "plan") return { view: "plan" };
-    if (h === "thanksgiving") return { view: "thanksgiving" };
+    if (sectionById[h]) return { view: "section", section: sectionById[h] };
     if (h.indexOf("r/") === 0 && byId[h.slice(2)]) return { view: "recipe", recipe: byId[h.slice(2)] };
     return { view: "list" };
   }
@@ -537,17 +549,24 @@
     } else if (r.view === "plan") {
       app.innerHTML = viewPlan();
       document.title = "Thanksgiving prep plan · Daniel’s Recipe Book";
-    } else if (r.view === "thanksgiving") {
-      app.innerHTML = viewList(true);
-      document.title = "Thanksgiving · Daniel’s Recipe Book";
+    } else if (r.view === "section") {
+      app.innerHTML = viewList(r.section);
+      document.title = r.section.tab + " · Daniel’s Recipe Book";
     } else {
-      app.innerHTML = viewList(false);
+      app.innerHTML = viewList(null);
       document.title = "Daniel’s Recipe Book";
     }
+    // which tab is lit: the section you are in, or the one you opened this recipe from
+    var where = r.view === "section" ? r.section.id : r.view === "plan" ? "thanksgiving" : "recipes";
+    if (r.view === "recipe" && trail.length) {
+      where = trail[0].key === "plan" ? "thanksgiving" : sectionById[trail[0].key] ? trail[0].key : "recipes";
+    }
+    var tabs = document.querySelector(".tabs");
+    tabs.innerHTML = '<a href="#/" data-tab="recipes">All recipes</a>' + SECTIONS.map(function (s) {
+      return '<a href="#/' + esc(s.id) + '" data-tab="' + esc(s.id) + '">' + esc(s.tab) + "</a>";
+    }).join("");
     Array.prototype.forEach.call(document.querySelectorAll(".tabs a"), function (a) {
-      var inThanksgiving = r.view === "plan" || r.view === "thanksgiving" ||
-        (r.view === "recipe" && trail.length > 0 && (trail[0].key === "plan" || trail[0].key === "thanksgiving"));
-      var on = (a.dataset.tab === "thanksgiving") === inThanksgiving;
+      var on = a.dataset.tab === where;
       if (on) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current");
     });
     window.scrollTo(0, keepScroll ? y : 0);
