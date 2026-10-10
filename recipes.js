@@ -1,4 +1,4 @@
-/* Thanksgiving recipe book: the data.
+/* Daniel's Recipe Book: the data.
  *
  * Every recipe is written as ONE home batch. The page scales quantities
  * from here, so edit amounts in this file only.
@@ -20,12 +20,14 @@
  *   ref    id of another recipe this line points to.
  *
  * Recipe fields
+ *   thanksgiving  true = also listed in the Thanksgiving section.
+ *   related  ids of other recipes to point to at the end of this one.
  *   crowd    how many of these batches the big dinner used (from the original book).
  *   links    outside pages, shown as buttons after the method: { label, site, url }.
  *   veganSwap  true = the recipe becomes vegan once every swap line is switched.
  */
 
-window.GROUPS = ["Mains", "Sides", "Sauces and basics", "Dessert"];
+window.GROUPS = ["Breakfast", "Mains", "Sides", "Soups", "Sauces, dips and spreads", "Desserts"];
 
 window.TAGS = {
   vegan: "Vegan",
@@ -40,6 +42,7 @@ window.RECIPES = [
     id: "turkey",
     name: "Roast turkey",
     group: "Mains",
+    thanksgiving: true,
     tags: [],
     makes: { n: [8, 10], what: "servings" },
     time: "About 15 minutes per pound, plus 30 minutes resting",
@@ -93,6 +96,7 @@ window.RECIPES = [
     id: "vegan-roast",
     name: "Vegan “turkey” roast",
     group: "Mains",
+    thanksgiving: true,
     tags: ["vegan"],
     makes: { n: [1, 1], what: "large loaf, 8 to 10 servings", pl: "large loaves, 8 to 10 servings each" },
     crowd: 2,
@@ -154,6 +158,7 @@ window.RECIPES = [
     id: "mashed-potatoes",
     name: "Garlic mashed potatoes",
     group: "Sides",
+    thanksgiving: true,
     tags: ["gf"],
     veganSwap: true,
     makes: { n: [12, 14], what: "servings" },
@@ -205,6 +210,7 @@ window.RECIPES = [
     id: "stuffing",
     name: "Apple stuffing",
     group: "Sides",
+    thanksgiving: true,
     tags: ["vegan"],
     makes: { n: [12, 16], what: "servings" },
     crowd: 5,
@@ -250,6 +256,7 @@ window.RECIPES = [
     id: "green-beans",
     name: "Garlic green beans",
     group: "Sides",
+    thanksgiving: true,
     tags: ["vegan", "gf"],
     makes: { n: [8, 8], what: "servings" },
     crowd: 10,
@@ -283,6 +290,7 @@ window.RECIPES = [
     id: "mac-and-cheese",
     name: "Baked mac and cheese",
     group: "Sides",
+    thanksgiving: true,
     tags: ["dairy"],
     makes: { n: [10, 12], what: "servings" },
     crowd: 4,
@@ -341,6 +349,7 @@ window.RECIPES = [
     id: "arroz-con-gandules",
     name: "Arroz con gandules",
     group: "Sides",
+    thanksgiving: true,
     tags: ["vegan"],
     makes: { n: [8, 10], what: "servings" },
     crowd: 20,
@@ -389,6 +398,7 @@ window.RECIPES = [
     id: "habichuelas",
     name: "Habichuelas guisadas with ham",
     group: "Sides",
+    thanksgiving: true,
     tags: ["pork"],
     makes: { n: [6, 8], what: "servings" },
     crowd: 24,
@@ -469,7 +479,8 @@ window.RECIPES = [
   {
     id: "gravy",
     name: "Vegan gravy",
-    group: "Sauces and basics",
+    group: "Sauces, dips and spreads",
+    thanksgiving: true,
     tags: ["vegan", "gf"],
     makes: { n: [4, 4], what: "cups" },
     crowd: 2,
@@ -507,7 +518,8 @@ window.RECIPES = [
   {
     id: "cranberry-sauce",
     name: "Cranberry sauce",
-    group: "Sauces and basics",
+    group: "Sauces, dips and spreads",
+    thanksgiving: true,
     tags: ["vegan", "gf"],
     makes: { n: [16, 20], what: "servings" },
     crowd: 6,
@@ -545,7 +557,8 @@ window.RECIPES = [
   {
     id: "herb-butter",
     name: "Herb and garlic butter",
-    group: "Sauces and basics",
+    group: "Sauces, dips and spreads",
+    thanksgiving: true,
     tags: ["gf"],
     veganSwap: true,
     makes: { n: [1.25, 1.25], what: "cups" },
@@ -582,7 +595,8 @@ window.RECIPES = [
   {
     id: "basting-mix",
     name: "Turkey basting mix",
-    group: "Sauces and basics",
+    group: "Sauces, dips and spreads",
+    thanksgiving: true,
     tags: ["gf"],
     makes: { n: [1, 1], what: "turkey", pl: "turkeys" },
     equipment: ["Small pan"],
@@ -610,7 +624,8 @@ window.RECIPES = [
   {
     id: "sweet-potatoes",
     name: "Candied sweet potatoes",
-    group: "Dessert",
+    group: "Desserts",
+    thanksgiving: true,
     tags: ["vegan", "gf"],
     makes: { n: [8, 10], what: "servings" },
     crowd: 14,
@@ -675,7 +690,8 @@ window.RECIPES = [
   {
     id: "pumpkin-pie",
     name: "Vegan pumpkin pie",
-    group: "Dessert",
+    group: "Desserts",
+    thanksgiving: true,
     tags: ["vegan"],
     makes: { n: [1, 1], what: "pie, 8 slices", pl: "pies, 8 slices each" },
     crowd: 12,
@@ -709,6 +725,348 @@ window.RECIPES = [
     ],
     notes: [
       "Bake it the day before so it has time to chill and set."
+    ]
+  },
+  /* ---------- everyday recipes ---------- */
+
+  {
+    id: "banana-pancakes",
+    name: "Daniel’s banana pancakes",
+    group: "Breakfast",
+    tags: [],
+    equipment: ["Blender or masher", "Two mixing bowls", "Frying pan"],
+    parts: [
+      {
+        items: [
+          { q: 4, item: "banana", pl: "bananas" },
+          { q: 3, item: "egg", pl: "eggs" },
+          { q: [1, 2], u: "cup", item: "flour", note: "wheat, whole wheat, soba, etc." },
+          { q: 1, u: "cup", item: "milk", swaps: ["soy milk", "almond milk", "coconut milk", "yogurt"] },
+          { q: 1.5, u: "tbsp", item: "baking powder" },
+          { q: 2, u: "tsp", item: "vanilla extract" },
+          { q: 1, u: "tsp", item: "cinnamon" },
+          { item: "Salt, a pinch" },
+          { item: "Butter or oil, for the pan" },
+          { item: "Maple syrup, for serving" }
+        ]
+      },
+      {
+        title: "Optional",
+        items: [
+          { item: "Chia seeds" },
+          { item: "Peanut butter" },
+          { item: "Berries" },
+          { item: "Shredded coconut" }
+        ]
+      }
+    ],
+    steps: [
+      {
+        items: [
+          "Blend or mash the bananas.",
+          "Mix in the milk, vanilla and cinnamon. If you are adding peanut butter, add it here.",
+          "Blend until smooth. A few small banana lumps are fine.",
+          "Pour into a mixing bowl and beat in the eggs.",
+          "In a separate bowl, mix the flour, baking powder and a pinch of salt.",
+          "Add the dry ingredients to the wet and mix only until just combined. Do not overmix: the batter should be slightly lumpy and still a little thin.",
+          "Fold in any other optional ingredients.",
+          "Melt a bit of butter in a frying pan over medium heat.",
+          "Pour in large spoonfuls of batter, sized to the pancakes you want.",
+          "Cook until large bubbles form and the underside is firm, then flip.",
+          "Cook the other side until the center is no longer raw.",
+          "Serve with maple syrup, jelly, butter, or all three."
+        ]
+      }
+    ]
+  },
+
+  {
+    id: "baked-tofu",
+    name: "Daniel’s baked tofu",
+    group: "Mains",
+    tags: ["vegan"],
+    time: "50 to 65 minutes in the oven",
+    equipment: ["Large mixing bowl", "Baking sheets"],
+    parts: [
+      {
+        items: [
+          { q: 2, u: "package", item: "extra or super firm tofu (14 oz each), or fried tofu" },
+          { q: 4, u: "tbsp", item: "olive oil" },
+          { q: 2, u: "tbsp", item: "soy sauce" },
+          { q: 1, u: "tsp", item: "lemon juice" },
+          { q: 1, u: "tbsp", item: "liquid smoke", note: "or a cheap smoky scotch" },
+          { q: 2, u: "tbsp", item: "miso paste" },
+          { q: 0.5, u: "cup", item: "nutritional yeast, or more" },
+          { q: 0.25, u: "cup", item: "scotch, whiskey, tequila, shochu, vodka or similar" },
+          { q: 3, u: "tbsp", item: "cumin" },
+          { item: "Garlic, to taste" },
+          { item: "Black pepper, to taste" }
+        ]
+      },
+      {
+        title: "Optional but really good",
+        items: [
+          { item: "Mayonnaise, yogurt, or both" }
+        ]
+      },
+      {
+        title: "Optional",
+        items: [
+          { item: "Pepper flakes" },
+          { item: "Peanut butter" },
+          { item: "Sesame oil" },
+          { item: "Other spices" }
+        ]
+      }
+    ],
+    steps: [
+      {
+        items: [
+          "Mix the olive oil, liquid smoke, lemon juice and miso in a large mixing bowl until the miso is smooth.",
+          "Add the soy sauce, nutritional yeast, cumin, garlic and pepper, plus any optional ingredients and spices.",
+          "Add the alcohol until the sauce is thick but wet enough to coat the tofu. If it is too dry, or there is too little for the tofu, add more alcohol and a pinch more of the other ingredients. If it is too runny, add a pinch more yeast. It bakes better with less liquid.",
+          "Slice the tofu to the size you want. Small cubes are the usual; smaller pieces give crunchier tofu.",
+          "Fold the tofu into the sauce until coated. If you have time, let it marinate for a while.",
+          "Spread it out on baking sheets, with a little space between the pieces so they crisp up.",
+          "Bake at 350°F (180°C) for 30 to 45 minutes.",
+          "Check and flip the tofu, then bake another 20 minutes.",
+          "It is done when the small chunks and the edges look slightly burned and the smaller pieces are chewy.",
+          "Let it sit until slightly cooled. The softer pieces get chewier."
+        ]
+      }
+    ],
+    notes: [
+      "The amounts are eyeballed, and it is fine to improvise if you are missing something. The tofu, miso, cumin and yeast matter most.",
+      "A mix of firm tofu and fried silken tofu comes out more like meat, with chewy bits and soft, crunchy “fat” bits.",
+      "A little mayonnaise or yogurt adds fat, which adds a lot of flavor and makes it meatier. With either one it is no longer vegan unless you use a vegan version.",
+      "Smaller pieces come out crispier. Larger pieces baked for longer come out meatier and juicier.",
+      "Japanese tofu packages are smaller: use 4 instead of 2.",
+      "Keeps in the fridge for a few days. It is best the day it is made and the day after; later it goes soggy and loses its crispness."
+    ]
+  },
+
+  {
+    id: "turkey-soup",
+    name: "Turkey soup",
+    group: "Soups",
+    thanksgiving: true,
+    tags: [],
+    equipment: ["Soup pot"],
+    parts: [
+      {
+        items: [
+          { item: "Turkey leftovers" },
+          { q: 0.5, item: "onion, chopped", pl: "onions, chopped" },
+          { item: "Vegetables: carrots, cabbage, celery, spinach, mushrooms and so on" },
+          { q: [1, 3], item: "potato, chopped", pl: "potatoes, chopped" },
+          { item: "Soup stock" },
+          { item: "Herbs" },
+          { item: "Some of the frozen turkey juice from the back of the freezer" },
+          { item: "Olive oil" },
+          { item: "Garlic, if you have it" }
+        ]
+      }
+    ],
+    steps: [
+      {
+        items: [
+          "Sauté the onion, and garlic if you have it, in some olive oil over medium heat until the onion softens.",
+          "Add the vegetables and the turkey juice and cook for a bit.",
+          "Add the potatoes and herbs and cook a bit longer.",
+          "Add the turkey leftovers and the soup stock and turn the heat down to low.",
+          "Simmer until the potatoes are soft."
+        ]
+      }
+    ],
+    related: ["turkey"]
+  },
+
+  {
+    id: "yeast-dressing",
+    name: "Daniel’s yeast dressing",
+    group: "Sauces, dips and spreads",
+    tags: ["vegan"],
+    parts: [
+      {
+        items: [
+          { q: 1, u: "tsp", item: "sesame oil" },
+          { q: 2, u: "tbsp", item: "olive oil" },
+          { q: 1, u: "tsp", item: "apple cider vinegar" },
+          { q: 2, u: "tbsp", item: "soy sauce" },
+          { q: 2, u: "tbsp", item: "lemon or lime juice" },
+          { item: "Nutritional yeast, to consistency" },
+          { item: "Sesame seeds, to consistency" }
+        ]
+      },
+      {
+        title: "Optional",
+        items: [
+          { item: "Chia seeds" },
+          { item: "Flax seeds" },
+          { item: "Garlic powder" },
+          { item: "Oregano" },
+          { item: "Basil" }
+        ]
+      }
+    ],
+    steps: [
+      {
+        items: [
+          "Mix the oils together.",
+          "Add the vinegar, soy sauce and juice.",
+          "Mix in the sesame seeds.",
+          "Mix in the nutritional yeast.",
+          "Mix well and adjust. Too runny: add more yeast and seeds. Too thick: add more vinegar, juice or oil, to taste. It should be thick enough to coat a salad but loose enough to mix in."
+        ]
+      }
+    ],
+    notes: [
+      "Use nutritional yeast, NOT baking yeast.",
+      "Goes very well on a kale salad."
+    ]
+  },
+
+  {
+    id: "hummus",
+    name: "Hummus",
+    group: "Sauces, dips and spreads",
+    tags: ["vegan", "gf"],
+    equipment: ["Food processor"],
+    parts: [
+      {
+        items: [
+          { q: 1, u: "can", item: "chickpeas (15 oz)", pl: "chickpeas (15 oz each)" },
+          { q: 2, u: "tbsp", item: "tahini" },
+          { q: 0.25, item: "onion", pl: "onions" },
+          { q: [2, 3], u: "clove", item: "garlic" },
+          { q: 1, u: "tbsp", item: "olive oil" },
+          { q: 1, u: "tbsp", item: "lemon or lime juice" },
+          { item: "Spices, to taste" }
+        ]
+      },
+      {
+        title: "Optional",
+        items: [
+          { item: "Sundried tomatoes" },
+          { item: "Cilantro" },
+          { item: "Roasted peppers" },
+          { item: "Olives" },
+          { item: "Anything else you like" }
+        ]
+      }
+    ],
+    steps: [
+      {
+        items: [
+          "Drain the chickpeas and keep the liquid for another recipe.",
+          "Put everything in a food processor and blend until smooth."
+        ]
+      }
+    ],
+    notes: [
+      "The liquid from the can is aquafaba, which is what the vegan chocolate mousse is made from."
+    ],
+    related: ["chocolate-mousse"]
+  },
+
+  {
+    id: "peanut-butter",
+    name: "Home-made peanut butter",
+    group: "Sauces, dips and spreads",
+    tags: ["vegan", "gf"],
+    time: "About 10 minutes in the food processor",
+    equipment: ["Food processor"],
+    parts: [
+      {
+        items: [
+          { q: 3, u: "cup", item: "unsalted shelled peanuts", note: "about" }
+        ]
+      }
+    ],
+    steps: [
+      {
+        items: [
+          "If the peanuts are unroasted, spread them in a thin layer on a pan and roast at 350°F (180°C) for 15 minutes.",
+          "Put the peanuts in a food processor and run it on high until they turn into a thick powder.",
+          "Keep going until it turns into peanut butter. This can take a while, around 10 minutes. You may need to stop and let the motor cool, but it will end up smooth and creamy."
+        ]
+      }
+    ],
+    notes: [
+      "The papery skins can stay on. Taking them off gives a lighter, slightly smoother peanut butter, but they add a lot of vitamins and minerals.",
+      "Keeps in the fridge for about a month."
+    ],
+    related: ["peanut-butter-cookies"]
+  },
+
+  {
+    id: "peanut-butter-cookies",
+    name: "Gluten free peanut butter cookies",
+    group: "Desserts",
+    tags: ["gf"],
+    time: "8 to 10 minutes in the oven",
+    equipment: ["Mixing bowl", "Non-stick cookie sheet", "Fork"],
+    parts: [
+      {
+        items: [
+          { q: 1, item: "jar (16 oz) separated, unsweetened peanut butter", pl: "jars (16 oz each) separated, unsweetened peanut butter", note: "or 2 cups home-made peanut butter per jar", ref: "peanut-butter" },
+          { g: 400, q: 2, u: "cup", item: "sugar" },
+          { q: 2, item: "egg", pl: "eggs" },
+          { item: "Chocolate chips, as many as you want", note: "optional" }
+        ]
+      }
+    ],
+    steps: [
+      {
+        items: [
+          "Drain the oil off the peanut butter and keep it.",
+          "Mix the sugar and peanut butter together.",
+          "Mix in the eggs.",
+          "If the dough is too dry, add back some of the peanut oil. It should be like a smooth but thick cookie dough.",
+          "Fold in the chocolate chips.",
+          "Shape into balls on a prepared non-stick cookie sheet.",
+          "Press each ball into a disk with a fork, which gives the classic peanut butter cookie hash marks.",
+          "Bake at 350°F (180°C) for about 8 to 10 minutes. Check at 8: these burn easily. Take one out, let it cool and try it.",
+          "Cool and enjoy."
+        ]
+      }
+    ],
+    notes: [
+      "Home-made peanut butter has no separated oil to drain, so skip the first step. If the dough is dry, add a little neutral or peanut oil."
+    ]
+  },
+
+  {
+    id: "chocolate-mousse",
+    name: "Vegan chocolate mousse",
+    group: "Desserts",
+    tags: ["vegan", "gf"],
+    time: "Overnight in the fridge",
+    equipment: ["Double boiler", "Mixing bowl and whisk, or a stand mixer"],
+    parts: [
+      {
+        items: [
+          { q: 1, item: "can’s worth of aquafaba (the liquid from a can of chickpeas)", pl: "cans’ worth of aquafaba (the liquid from cans of chickpeas)", ref: "hummus" },
+          { g: 100, q: 0.5, u: "cup", item: "sugar" },
+          { q: 1, u: "tsp", item: "vanilla extract" },
+          { g: 85, q: 0.5, u: "cup", item: "chocolate, chips or a bar chopped small" },
+          { q: 2, u: "tsp", item: "soy milk" }
+        ]
+      }
+    ],
+    steps: [
+      {
+        items: [
+          "Melt the chocolate in a double boiler, stirring slowly as it melts. Once melted, stir in the soy milk until smooth. Take it off the heat and set aside until cooled.",
+          "Put the aquafaba in a mixing bowl or mixer and beat with a whisk or whisk attachment until thick.",
+          "Pour in the sugar and vanilla and keep beating until it forms thick peaks. It should be firm; when in doubt, keep going until the peaks are thick and sturdy.",
+          "Carefully fold the cooled chocolate into the whipped aquafaba until smooth and completely mixed.",
+          "Pour into cups and refrigerate overnight. It sets into mousse."
+        ]
+      }
+    ],
+    notes: [
+      "Make sure the chocolate has cooled before folding it in. If it is still warm, the mousse turns gritty."
     ]
   }
 ];

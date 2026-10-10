@@ -1,18 +1,19 @@
-# Thanksgiving recipe book
+# Daniel's Recipe Book
 
-A phone-friendly recipe book for a full Thanksgiving dinner: 14 recipes and a three-day prep plan. It is a plain static web page with no build step, no dependencies and no server.
+A phone-friendly recipe book: 22 recipes Daniel experimented with and adapted, including a full Thanksgiving dinner with a three-day prep plan. It is a plain static web page with no build step, no dependencies and no server.
 
-The recipes started as a cookbook for cooking in bulk for 100 to 150 people. Here each one is written as a single home batch, and the page scales it back up when you need more.
+The Thanksgiving recipes started as a cookbook for cooking in bulk for 100 to 150 people. Here each one is written as a single home batch, and the page scales it back up when you need more.
 
 ## What it does
 
-- **Recipe list** with search (by recipe or ingredient) and vegan and gluten-free filters.
+- **Recipe list** for the whole book, grouped by type, with search (by recipe or ingredient) and vegan and gluten-free filters.
+- **Thanksgiving section** with its own recipe list, the prep plan and the turkey calculator.
 - **Batch scaling** from ½ batch to 30 batches. Amounts are rewritten in sensible kitchen units as they change (3 tsp becomes 1 tbsp, 16 oz becomes 1 lb). A "Big dinner" button jumps to the batch count the original bulk cookbook used.
 - **US and metric units.** Metric shows grams and millilitres, leads with Celsius, and converts the measurements inside the steps and notes too.
 - **Ingredient swaps.** Dairy lines in some recipes have a drop-down of one-for-one vegan alternatives. A recipe is tagged vegan once every swap is made.
 - **Cooking aids:** tap an ingredient or a step to cross it off, and keep the screen awake while you cook (on browsers that support it).
-- **Links between recipes**, with a button back to the recipe you came from at the same scroll position.
-- **Prep plan** with checklists for two days before, the day before and Thanksgiving day, plus a calculator for when the turkey goes in the oven.
+- **Links between recipes** (ingredients that are recipes themselves, and related recipes), with a button back to the recipe you came from at the same scroll position.
+- **Thanksgiving prep plan** with checklists for two days before, the day before and Thanksgiving day, plus a calculator for when the turkey goes in the oven.
 - Light and dark themes that follow the phone's setting.
 
 Batch sizes, unit choice, swaps and prep plan check marks are saved in the browser's local storage, so they stay on that phone only.
@@ -45,6 +46,7 @@ A recipe looks like this:
   id: "green-beans",                  // used in the page address; keep it unique
   name: "Garlic green beans",
   group: "Sides",                     // must match a name in window.GROUPS
+  thanksgiving: true,                 // also list it in the Thanksgiving section (optional)
   tags: ["vegan", "gf"],              // keys from window.TAGS
   makes: { n: [8, 8], what: "servings" },
   crowd: 10,                          // batches for the big dinner (optional)
@@ -63,6 +65,7 @@ A recipe looks like this:
     { title: "Optional heading", items: ["First step.", "Second step."] }
   ],
   notes: ["Anything worth knowing."],
+  related: ["turkey"],                // ids of recipes to point to at the end (optional)
   links: [{ label: "How to trim beans", site: "example.com", url: "https://example.com/" }]
 }
 ```

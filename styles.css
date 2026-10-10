@@ -1,4 +1,4 @@
-/* Thanksgiving recipe book.
+/* Daniel's Recipe Book.
  * Built for a phone propped on a counter: big type, big touch targets,
  * amounts in their own column so they can be found at a glance.
  * Dietary colours follow kitchen day-dot labels: one colour, one meaning. */
@@ -86,6 +86,16 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 
 .masthead { padding: 4px 0 20px; }
 .masthead p { margin-top: 12px; color: var(--muted); max-width: 30em; }
+
+/* the way into a section: one solid block, so it reads as a door and not a recipe row */
+.feature {
+  display: block; margin: 0 0 14px; padding: 16px 44px 16px 18px; position: relative;
+  background: var(--cranberry); color: var(--paper); border-radius: 12px; text-decoration: none;
+}
+.feature strong { display: block; font: 700 1.375rem/1.15 var(--display); }
+.feature span { display: block; margin-top: 4px; font-size: 0.9375rem; opacity: 0.9; }
+.feature::after { content: ""; position: absolute; right: 20px; top: 50%; width: 10px; height: 10px; margin-top: -6px; border-right: 2.5px solid currentColor; border-top: 2.5px solid currentColor; transform: rotate(45deg); }
+.feature:focus-visible { outline-color: var(--ink); }
 
 .finder { position: sticky; top: 0; z-index: 2; background: var(--paper); padding: 10px 0 12px; margin: 0 calc(var(--gutter) * -1); padding-left: var(--gutter); padding-right: var(--gutter); border-bottom: 1px solid var(--line); }
 .finder input {
@@ -285,7 +295,7 @@ noscript { display: block; padding: 24px var(--gutter); }
 }
 
 @media print {
-  .tabs, .scaler, .wake, .back, .return, .outlink, .reset, .finder, .units { display: none; }
+  .tabs, .scaler, .wake, .feature, .back, .return, .outlink, .reset, .finder, .units { display: none; }
   #app { padding: 0; max-width: none; }
   .confirm { background: none; }
 }

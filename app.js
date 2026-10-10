@@ -1,4 +1,4 @@
-/* Thanksgiving recipe book: the page logic.
+/* Daniel's Recipe Book: the page logic.
  * Plain script, no build step. Open index.html directly or host the folder anywhere. */
 (function () {
   "use strict";
@@ -238,7 +238,9 @@
     }).join("");
   }
 
-  function viewList() {
+  /* The whole book, or just the Thanksgiving section. */
+  function viewList(thanksgiving) {
+    var book = RECIPES.filter(function (r) { return !thanksgiving || r.thanksgiving; });
     var q = listState.q.trim().toLowerCase();
     var tag = listState.tag;
 
@@ -252,10 +254,21 @@
       return hay.indexOf(q) >= 0;
     }
 
-    var html = '<div class="topbar">' + unitSwitch() + "</div>" + '<header class="masthead">' +
-      "<h1>Thanksgiving dinner</h1>" +
-      "<p>" + RECIPES.length + " recipes, each written as one batch for a family table. Open one to scale it up or down.</p>" +
-      "</header>";
+    var html;
+    if (thanksgiving) {
+      html = '<div class="topbar"><a class="back" href="#/"><span>All recipes</span></a>' + unitSwitch() + "</div>" +
+        '<header class="masthead"><h1>Thanksgiving dinner</h1>' +
+        "<p>" + book.length + " recipes, each written as one batch for a family table. Open one to scale it up for a crowd.</p></header>" +
+        '<a class="feature" href="#/plan"><strong>Prep plan and turkey timer</strong>' +
+        "<span>What to do two days before, the day before and on the day</span></a>";
+    } else {
+      var count = RECIPES.filter(function (r) { return r.thanksgiving; }).length;
+      html = '<div class="topbar">' + unitSwitch() + "</div>" + '<header class="masthead">' +
+        "<h1>Daniel’s Recipe Book</h1>" +
+        "<p>" + book.length + " recipes Daniel experimented with and adapted. Open one to scale it up or down.</p></header>" +
+        '<a class="feature" href="#/thanksgiving"><strong>Thanksgiving dinner</strong>' +
+        "<span>" + count + " recipes, a three-day prep plan and a turkey timer</span></a>";
+    }
 
     html += '<div class="finder">' +
       '<label class="sr" for="search">Search recipes and ingredients</label>' +
@@ -269,7 +282,7 @@
 
     var shown = 0;
     GROUPS.forEach(function (g) {
-      var rows = RECIPES.filter(function (r) { return r.group === g && matches(r); });
+      var rows = book.filter(function (r) { return r.group === g && matches(r); });
       if (!rows.length) return;
       shown += rows.length;
       html += '<section class="group"><h2>' + esc(g) + "</h2><ul>";
@@ -288,7 +301,7 @@
       html += '<p class="empty">No recipe matches that. Try a shorter word, or <button type="button" class="link" data-clear>show everything</button>.</p>';
     }
 
-    html += '<p class="footnote">Store bought: rolls and whipped cream. The original book also lists callaloo, white rice, black beans and vegan cookies, but has no recipes for them yet.</p>';
+    if (thanksgiving) html += '<p class="footnote">Store bought: rolls and whipped cream. The original book also lists callaloo, white rice, black beans and vegan cookies, but has no recipes for them yet.</p>';
     return html;
   }
 
@@ -368,6 +381,11 @@
     });
     html += "</section>";
 
+    (r.related || []).forEach(function (id) {
+      if (!byId[id]) return;
+      html += '<a class="outlink" href="#/r/' + esc(id) + '"><strong>' + esc(byId[id].name) + "</strong>" +
+        "<span>Related recipe</span></a>";
+    });
     (r.links || []).forEach(function (l) {
       html += '<a class="outlink" href="' + esc(l.url) + '" target="_blank" rel="noopener noreferrer">' +
         "<strong>" + esc(l.label) + "</strong>" +
@@ -433,7 +451,7 @@
   }
 
   function viewPlan() {
-    var html = '<div class="topbar">' + unitSwitch() + '</div><header class="masthead"><h1>Prep plan</h1>' +
+    var html = '<div class="topbar"><a class="back" href="#/thanksgiving"><span>Thanksgiving</span></a>' + unitSwitch() + '</div><header class="masthead"><h1>Prep plan</h1>' +
       "<p>Spread the work over three days so Thanksgiving itself is mostly cooking, reheating and serving. Check marks are remembered on this phone.</p></header>";
 
     html += '<section class="turkey-clock"><h2>When does the turkey go in?</h2>' +
@@ -487,8 +505,8 @@
       } else if (next.view === "recipe" && prev.view !== "list") {
         trail.push({
           key: keyOf(prev),
-          href: "#/" + (prev.view === "plan" ? "plan" : keyOf(prev)),
-          label: prev.view === "plan" ? "the prep plan" : prev.recipe.name,
+          href: "#/" + keyOf(prev),
+          label: prev.view === "plan" ? "the prep plan" : prev.view === "thanksgiving" ? "Thanksgiving" : prev.recipe.name,
           y: y
         });
       } else {
@@ -504,6 +522,7 @@
   function route() {
     var h = location.hash.replace(/^#\/?/, "");
     if (h === "plan") return { view: "plan" };
+    if (h === "thanksgiving") return { view: "thanksgiving" };
     if (h.indexOf("r/") === 0 && byId[h.slice(2)]) return { view: "recipe", recipe: byId[h.slice(2)] };
     return { view: "list" };
   }
@@ -515,16 +534,21 @@
     document.body.dataset.view = r.view;
     if (r.view === "recipe") {
       app.innerHTML = viewRecipe(r.recipe);
-      document.title = r.recipe.name + " · Thanksgiving";
+      document.title = r.recipe.name + " · Daniel’s Recipe Book";
     } else if (r.view === "plan") {
       app.innerHTML = viewPlan();
-      document.title = "Prep plan · Thanksgiving";
+      document.title = "Thanksgiving prep plan · Daniel’s Recipe Book";
+    } else if (r.view === "thanksgiving") {
+      app.innerHTML = viewList(true);
+      document.title = "Thanksgiving · Daniel’s Recipe Book";
     } else {
-      app.innerHTML = viewList();
-      document.title = "Thanksgiving recipes";
+      app.innerHTML = viewList(false);
+      document.title = "Daniel’s Recipe Book";
     }
     Array.prototype.forEach.call(document.querySelectorAll(".tabs a"), function (a) {
-      var on = (a.dataset.tab === "plan") === (r.view === "plan");
+      var inThanksgiving = r.view === "plan" || r.view === "thanksgiving" ||
+        (r.view === "recipe" && trail.length > 0 && (trail[0].key === "plan" || trail[0].key === "thanksgiving"));
+      var on = (a.dataset.tab === "thanksgiving") === inThanksgiving;
       if (on) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current");
     });
     window.scrollTo(0, keepScroll ? y : 0);
