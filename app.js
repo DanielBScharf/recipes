@@ -301,7 +301,6 @@
       html += '<p class="empty">No recipe matches that. Try a shorter word, or <button type="button" class="link" data-clear>show everything</button>.</p>';
     }
 
-    if (thanksgiving) html += '<p class="footnote">Store bought: rolls and whipped cream. The original book also lists callaloo, white rice, black beans and vegan cookies, but has no recipes for them yet.</p>';
     return html;
   }
 
